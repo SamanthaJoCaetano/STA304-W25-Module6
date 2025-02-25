@@ -240,6 +240,34 @@ mysvyglm <- svyglm(mass_over100 ~ height + species_clean,
 summary(mysvyglm)
 ```
 
+### Task 5: Create a logistic regression for Stratified Random Sampling
+
+For the starwars data, let’s assume the study instead collected the data by stratifying by species, where in the population there 16 droids, 80 humans and 128 other species. Use the finite population correction with N=224 to estimate.
+
+Run a logistic regression model mass being over 100lbs given height and species.
+
+```{r}
+starwars_clean <- starwars_clean %>% 
+  mutate(pop_fpc = case_when(species_clean=="droid" ~ 16,
+                             species_clean=="human" ~ 80,
+                             species_clean=="other" ~ 128)) %>% 
+  mutate(samp_wt = case_when(species_clean=="droid" ~ 16/4,
+                             species_clean=="human" ~ 80/20,
+                             species_clean=="other" ~ 128/32))
+
+
+strata.design <- svydesign(id=~1,
+                       strata=~species_clean,
+                       weights = ~samp_wt, 
+                       fpc=~pop_fpc,
+                       data=starwars_clean)
+
+mysvyglm <- svyglm(mass_over100 ~ height + species_clean, 
+              family = "binomial", strata.design)
+
+summary(mysvyglm)
+```
+
 \newpage
 
 # Logistic Regression UCLA analysis of SRS with population of N=6000 code
