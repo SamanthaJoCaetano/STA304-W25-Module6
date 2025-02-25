@@ -120,7 +120,7 @@ What is similar?
 **Standard errors are different, but estimates are the same.**
 
 What happens if you change the $N$ in Task 1? Try setting
-$N=87, 224, 1000, 10000$
+$N=87, 224, 1000$
 
 ### Task 3: Create a Linear Model to predict mass
 
