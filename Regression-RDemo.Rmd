@@ -36,7 +36,7 @@ head(starwars)
 
 We will be working with `mass`, and `height` throughout this class, so
 let's remove the NAs. Additionally, we will be working with `species`,
-let's categorize species to be `human`, or `other`.
+let's categorize species to be `human`, \`droid\` or `other`.
 
 ```{r}
 summary(starwars$mass)
@@ -91,13 +91,10 @@ $$\hat{y}_{mass} = -11.25 + 0.63 x_{height}$$
 
 ### Task 2: Create a Linear Model to predict mass
 
-Use the `lm()` function in the `survey` library to run a linear
-regression estimation of mass given height.
+Use the `lm()` function to run a linear regression estimation of mass
+given height.
 
 ```{r}
-#install.packages("survey")
-library(survey)
-
 ## Using the Survey Library
 summary(lm(mass ~ height, data=starwars_clean))
 
@@ -133,19 +130,19 @@ fpc.srs = rep(N, n)
 starwars.design <- svydesign(id=~1, data=starwars_clean, fpc=fpc.srs)
 
 mysvylm <- svyglm(mass ~ height + species_clean, starwars.design)
-summary(mysvylm)
+summary(mysvylm) ### SRS
 
 ## Using lm
 mymodel<-lm(mass ~ height + species_clean, data=starwars_clean)
-summary(mymodel)
+summary(mymodel) ## TAUGHT IN STA302
 
 ```
 
 What is the model in this example?
 
 $$y_{mass} = \beta_0 + \beta_1 x_{height} + \beta_2x_{human} + \beta_3x_{other} + \epsilon$$
-This is a "simple linear regression" model (because there is only one
-numeric $x$ variable).
+This is a "multiple linear regression" model (because there is are two
+(more than 1) predictor $x$ variables).
 
 What is the estimate of the model?
 
@@ -218,8 +215,6 @@ $$log\Big(\frac{\hat{p}}{1-\hat{p}}\Big) = -11.45 + 0.06 x_{height} -2.14x_{huma
 Based off the above output, what is the predicted probability of a human
 who is 175cm tall being over 100lbs?
 
-**Answer: 0.05729392**
-
 ```{r}
 pred_odds <- -11.45547800 + 0.06230662*175 -2.14452294*1 -2.04236670*0 
 exp(pred_odds)/(1+exp(pred_odds))
@@ -242,9 +237,13 @@ summary(mysvyglm)
 
 ### Task 5: Create a logistic regression for Stratified Random Sampling
 
-For the starwars data, let’s assume the study instead collected the data by stratifying by species, where in the population there 16 droids, 80 humans and 128 other species. Use the finite population correction with N=224 to estimate.
+For the starwars data, let’s assume the study instead collected the data
+by stratifying by species, where in the population there 16 droids, 80
+humans and 128 other species. Use the finite population correction with
+N=224 to estimate.
 
-Run a logistic regression model mass being over 100lbs given height and species.
+Run a logistic regression model mass being over 100lbs given height and
+species.
 
 ```{r}
 starwars_clean <- starwars_clean %>% 
