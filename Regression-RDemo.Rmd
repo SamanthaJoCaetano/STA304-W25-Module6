@@ -231,6 +231,15 @@ pred_prob <- predict(my_glm, tibble(species_clean="human", height=175), type = "
 pred_prob
 ```
 
+```{r}
+starwars.design <- svydesign(id=~1, data=starwars_clean, fpc=fpc.srs)
+
+mysvyglm <- svyglm(mass_over100 ~ height + species_clean, 
+              family = "binomial", starwars.design)
+
+summary(mysvyglm)
+```
+
 \newpage
 
 # Logistic Regression UCLA analysis of SRS with population of N=6000 code
